@@ -1,0 +1,63 @@
+shaders:
+
+  - name: default_mesh
+    vertex: shaders/default_mesh.vsh
+    fragment: shaders/default_mesh.fsh
+    
+  - name: skinned_mesh
+    vertex: shaders/skinned_mesh.vsh
+    fragment: shaders/skinned_mesh.fsh
+
+entities:
+
+  - name: scenario
+    transform:
+      position:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      rotation:
+        w: 1.0
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      scale:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+    shading: default_mesh
+    mesh:
+      file: meshes/room.msh
+    texture:
+      file: textures/room.txr
+
+  - name: knight
+    transform:
+      position:
+        x: 0.0
+        y: 1.1
+        z: 0.0
+      rotation:
+        w: 1.0
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      scale:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+    shading: skinned_mesh
+    mesh:
+      file: meshes/knight.msh
+    skeleton:
+      file: meshes/knight.skl
+    texture:
+      file: textures/knight.txr
+    animations:
+      - name: knight_idle
+        file: animations/knight_idle.ani
+      - name: knight_walk
+        file: animations/knight_walk.ani
+    animation: knight_idle
+    script:
+      file: scripts/knight.lua

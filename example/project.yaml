@@ -1,0 +1,7 @@
+name: My Game
+icon: icon.png
+resolution:
+  width: 640
+  height: 480
+scenes:
+  - scenes/scene1.yaml
