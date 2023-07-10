@@ -14,6 +14,12 @@ clone the repo and use cmake to build it with your preferred compiler, i've used
 - entity component system
 - custom shaders
 
+## currently working on
+
+- collision
+- gui rendering
+- tools for converting the models from fbx to the engine format
+
 ## how to use
 
 enter the example folder to see a simple project built with it
