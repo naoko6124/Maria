@@ -28,3 +28,8 @@ function update(delta)
         animation.set_animation("knight_idle");
     end
 end
+
+function on_collision(distance)
+    print("collision: "..distance)
+    transform.translate(0, 0, -distance)
+end

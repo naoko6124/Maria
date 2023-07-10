@@ -6,6 +6,7 @@
 #include <entneko.h>
 #include <yaml-cpp/yaml.h>
 
+#include <core/collider.h>
 #include <core/components.h>
 #include <core/script.h>
 #include <renderer/camera.h>
@@ -126,6 +127,17 @@ namespace maria
                     scp.set_window(m_window);
                     scp.load(script_path.string());
                 }
+                if (ent_node["collider"])
+                {
+                    collider& col = world.add_component<collider>(e);
+                    transform& t = world.get_component<transform>(e);
+                    col.tf = &t;
+                    glm::vec3 size;
+                    size.x = ent_node["collider"]["x"].as<float>();
+                    size.y = ent_node["collider"]["y"].as<float>();
+                    size.z = ent_node["collider"]["z"].as<float>();
+                    col.size = size;
+                }
             }
         }
         void start()
@@ -149,6 +161,21 @@ namespace maria
             world.query<script>([&w, &delta](entneko::entity e) {
                 script& s = w.get_component<script>(e);
                 s.update(delta);
+            });
+
+            world.query<collider, script>([&w](entneko::entity e) {
+                script& s = w.get_component<script>(e);
+                collider& c1 = w.get_component<collider>(e);
+
+                w.query<collider>([&w, &s, &c1](entneko::entity e) {
+                    collider& c2 = w.get_component<collider>(e);
+                    if (c2 == c1)
+                        return;
+
+                    auto idt = c1.intersect(c2);
+                    if (idt.intersect)
+                        s.on_collision(idt.distance);
+                });
             });
 
             world.query<shading, transform, mesh, texture>([&w, &sh, &c](entneko::entity e) {

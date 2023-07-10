@@ -65,6 +65,12 @@ namespace maria
             lua_pushnumber(L, delta);
             lua_call(L, 1, 0);
         }
+        void on_collision(float distance)
+        {
+            lua_getglobal(L, "on_collision");
+            lua_pushnumber(L, distance);
+            lua_call(L, 1, 0);
+        }
 
     public:
         entneko::entity e;
