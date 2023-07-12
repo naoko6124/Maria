@@ -762,7 +762,6 @@ void ColladaParser::ReadControllerWeights(XmlNode &node, Collada::Controller &pC
                 if (text == nullptr) {
                     throw DeadlyImportError("Out of data while reading <vertex_weights>");
                 }
-                SkipSpacesAndLineEnd(&text);
                 it->first = strtoul10(text, &text);
                 SkipSpacesAndLineEnd(&text);
                 if (*text == 0) {
@@ -1855,6 +1854,7 @@ size_t ColladaParser::ReadPrimitives(XmlNode &node, Mesh &pMesh, std::vector<Inp
         default:
             // LineStrip is not supported due to expected index unmangling
             throw DeadlyImportError("Unsupported primitive type.");
+            break;
         }
 
         // store the face size to later reconstruct the face from

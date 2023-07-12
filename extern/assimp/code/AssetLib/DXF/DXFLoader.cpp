@@ -71,7 +71,7 @@ static const aiColor4D AI_DXF_DEFAULT_COLOR(aiColor4D(0.6f, 0.6f, 0.6f, 0.6f));
 // color indices for DXF - 16 are supported, the table is
 // taken directly from the DXF spec.
 static aiColor4D g_aclrDxfIndexColors[] = {
-    aiColor4D(0.6f, 0.6f, 0.6f, 1.0f),
+    aiColor4D (0.6f, 0.6f, 0.6f, 1.0f),
     aiColor4D (1.0f, 0.0f, 0.0f, 1.0f), // red
     aiColor4D (0.0f, 1.0f, 0.0f, 1.0f), // green
     aiColor4D (0.0f, 0.0f, 1.0f, 1.0f), // blue
@@ -88,7 +88,6 @@ static aiColor4D g_aclrDxfIndexColors[] = {
     aiColor4D (1.0f, 1.0f, 1.0f, 1.0f), // white
     aiColor4D (0.6f, 0.0f, 1.0f, 1.0f)  // violet
 };
-
 #define AI_DXF_NUM_INDEX_COLORS (sizeof(g_aclrDxfIndexColors)/sizeof(g_aclrDxfIndexColors[0]))
 #define AI_DXF_ENTITIES_MAGIC_BLOCK "$ASSIMP_ENTITIES_MAGIC"
 
@@ -109,6 +108,14 @@ static const aiImporterDesc desc = {
     0,
     "dxf"
 };
+
+// ------------------------------------------------------------------------------------------------
+// Constructor to be privately used by Importer
+DXFImporter::DXFImporter() = default;
+
+// ------------------------------------------------------------------------------------------------
+// Destructor, private as well
+DXFImporter::~DXFImporter() = default;
 
 // ------------------------------------------------------------------------------------------------
 // Returns whether the class can handle the format of the given file.
@@ -222,7 +229,7 @@ void DXFImporter::ConvertMeshes(aiScene* pScene, DXF::FileData& output) {
         ASSIMP_LOG_VERBOSE_DEBUG("DXF: Unexpanded polycount is ", icount, ", vertex count is ", vcount);
     }
 
-    if (output.blocks.empty()) {
+    if (! output.blocks.size()  ) {
         throw DeadlyImportError("DXF: no data blocks loaded");
     }
 
@@ -364,7 +371,7 @@ void DXFImporter::ExpandBlockReferences(DXF::Block& bl,const DXF::BlockMap& bloc
                 ASSIMP_LOG_ERROR("DXF: PolyLine instance is nullptr, skipping.");
                 continue;
             }
-
+            
             std::shared_ptr<DXF::PolyLine> pl_out = std::shared_ptr<DXF::PolyLine>(new DXF::PolyLine(*pl_in));
 
             if (bl_src.base.Length() || insert.scale.x!=1.f || insert.scale.y!=1.f || insert.scale.z!=1.f || insert.angle || insert.pos.Length()) {
@@ -580,11 +587,10 @@ void DXFImporter::ParseInsertion(DXF::LineReader& reader, DXF::FileData& output)
     }
 }
 
-static constexpr unsigned int DXF_POLYLINE_FLAG_CLOSED = 0x1;
-// Currently unused
-//static constexpr unsigned int DXF_POLYLINE_FLAG_3D_POLYLINE = 0x8;
-//static constexpr unsigned int DXF_POLYLINE_FLAG_3D_POLYMESH = 0x10;
-static constexpr unsigned int DXF_POLYLINE_FLAG_POLYFACEMESH = 0x40;
+#define DXF_POLYLINE_FLAG_CLOSED        0x1
+#define DXF_POLYLINE_FLAG_3D_POLYLINE   0x8
+#define DXF_POLYLINE_FLAG_3D_POLYMESH   0x10
+#define DXF_POLYLINE_FLAG_POLYFACEMESH  0x40
 
 // ------------------------------------------------------------------------------------------------
 void DXFImporter::ParsePolyLine(DXF::LineReader& reader, DXF::FileData& output) {
@@ -632,6 +638,12 @@ void DXFImporter::ParsePolyLine(DXF::LineReader& reader, DXF::FileData& output) 
 
         reader++;
     }
+
+    //if (!(line.flags & DXF_POLYLINE_FLAG_POLYFACEMESH))   {
+    //  DefaultLogger::get()->warn((Formatter::format("DXF: polyline not currently supported: "),line.flags));
+    //  output.blocks.back().lines.pop_back();
+    //  return;
+    //}
 
     if (vguess && line.positions.size() != vguess) {
         ASSIMP_LOG_WARN("DXF: unexpected vertex count in polymesh: ",
@@ -722,18 +734,12 @@ void DXFImporter::ParsePolyLineVertex(DXF::LineReader& reader, DXF::PolyLine& li
         case 71:
         case 72:
         case 73:
-        case 74: {
-                if (cnti == 4) {
-                    ASSIMP_LOG_WARN("DXF: more than 4 indices per face not supported; ignoring");
-                    break;
-                }
-                const int index = reader.ValueAsSignedInt();
-                if (index >= 0) {
-                    indices[cnti++] = static_cast<unsigned int>(index);
-                } else {
-                    ASSIMP_LOG_WARN("DXF: Skip invisible face.");
-                }
+        case 74:
+            if (cnti == 4) {
+                ASSIMP_LOG_WARN("DXF: more than 4 indices per face not supported; ignoring");
+                break;
             }
+            indices[cnti++] = reader.ValueAsUnsignedInt();
             break;
 
         // color
@@ -771,7 +777,8 @@ void DXFImporter::ParsePolyLineVertex(DXF::LineReader& reader, DXF::PolyLine& li
 }
 
 // ------------------------------------------------------------------------------------------------
-void DXFImporter::Parse3DFace(DXF::LineReader& reader, DXF::FileData& output) {
+void DXFImporter::Parse3DFace(DXF::LineReader& reader, DXF::FileData& output)
+{
     // (note) this is also used for for parsing line entities, so we
     // must handle the vertex_count == 2 case as well.
 
@@ -788,7 +795,8 @@ void DXFImporter::Parse3DFace(DXF::LineReader& reader, DXF::FileData& output) {
         if (reader.GroupCode() == 0) {
             break;
         }
-        switch (reader.GroupCode()) {
+        switch (reader.GroupCode())
+        {
 
         // 8 specifies the layer
         case 8:

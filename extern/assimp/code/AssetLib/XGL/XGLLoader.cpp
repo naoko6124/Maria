@@ -65,7 +65,8 @@ namespace Assimp { // this has to be in here because LogFunctions is in ::Assimp
 
 template <>
 const char *LogFunctions<XGLImporter>::Prefix() {
-	return "XGL: ";
+    static auto prefix = "XGL: ";
+	return prefix;
 }
 
 } // namespace Assimp

@@ -69,16 +69,13 @@ Geometry::Geometry(uint64_t id, const Element& element, const std::string& name,
         }
         const BlendShape* const bsp = ProcessSimpleConnection<BlendShape>(*con, false, "BlendShape -> Geometry", element);
         if (bsp) {
-            auto pr = blendShapes.insert(bsp);
-            if (!pr.second) {
-                FBXImporter::LogWarn("there is the same blendShape id ", bsp->ID());
-            }
+            blendShapes.push_back(bsp);
         }
     }
 }
 
 // ------------------------------------------------------------------------------------------------
-const std::unordered_set<const BlendShape*>& Geometry::GetBlendShapes() const {
+const std::vector<const BlendShape*>& Geometry::GetBlendShapes() const {
     return blendShapes;
 }
 

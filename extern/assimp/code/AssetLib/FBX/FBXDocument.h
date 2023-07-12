@@ -46,7 +46,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define INCLUDED_AI_FBX_DOCUMENT_H
 
 #include <numeric>
-#include <unordered_set>
 #include <stdint.h>
 #include <assimp/mesh.h>
 #include "FBXProperties.h"
@@ -81,10 +80,6 @@ class BlendShape;
 class Skin;
 class Cluster;
 
-#define new_LazyObject new (allocator.Allocate(sizeof(LazyObject))) LazyObject
-#define new_Connection new (allocator.Allocate(sizeof(Connection))) Connection
-#define delete_LazyObject(_p) (_p)->~LazyObject()
-#define delete_Connection(_p) (_p)->~Connection()
 
 /** Represents a delay-parsed FBX objects. Many objects in the scene
  *  are not needed by assimp, so it makes no sense to parse them
@@ -860,14 +855,14 @@ public:
         return fullWeights;
     }
 
-    const std::unordered_set<const ShapeGeometry*>& GetShapeGeometries() const {
+    const std::vector<const ShapeGeometry*>& GetShapeGeometries() const {
         return shapeGeometries;
     }
 
 private:
     float percent;
     WeightArray fullWeights;
-    std::unordered_set<const ShapeGeometry*> shapeGeometries;
+    std::vector<const ShapeGeometry*> shapeGeometries;
 };
 
 /** DOM class for BlendShape deformers */
@@ -877,12 +872,12 @@ public:
 
     virtual ~BlendShape();
 
-    const std::unordered_set<const BlendShapeChannel*>& BlendShapeChannels() const {
+    const std::vector<const BlendShapeChannel*>& BlendShapeChannels() const {
         return blendShapeChannels;
     }
 
 private:
-    std::unordered_set<const BlendShapeChannel*> blendShapeChannels;
+    std::vector<const BlendShapeChannel*> blendShapeChannels;
 };
 
 /** DOM class for skin deformer clusters (aka sub-deformers) */
@@ -1077,7 +1072,7 @@ private:
 /** DOM root for a FBX file */
 class Document {
 public:
-    Document(Parser& parser, const ImportSettings& settings);
+    Document(const Parser& parser, const ImportSettings& settings);
 
     ~Document();
 
@@ -1161,7 +1156,7 @@ private:
     const ImportSettings& settings;
 
     ObjectMap objects;
-    Parser& parser;
+    const Parser& parser;
 
     PropertyTemplateMap templates;
     ConnectionMap src_connections;

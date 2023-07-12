@@ -52,7 +52,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Assimp {
 template <>
 const char *LogFunctions<BlenderBMeshConverter>::Prefix() {
-    return "BLEND_BMESH: ";
+    static auto prefix = "BLEND_BMESH: ";
+    return prefix;
 }
 } // namespace Assimp
 

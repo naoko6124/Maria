@@ -274,7 +274,7 @@ void MDLImporter::InternReadFile(const std::string &pFile,
 // ------------------------------------------------------------------------------------------------
 // Check whether we're still inside the valid file range
 void MDLImporter::SizeCheck(const void *szPos) {
-    if (!szPos || (const unsigned char *)szPos > this->mBuffer + this->iFileSize || szPos < this->mBuffer) {
+    if (!szPos || (const unsigned char *)szPos > this->mBuffer + this->iFileSize) {
         throw DeadlyImportError("Invalid MDL file. The file is too small "
                                 "or contains invalid data.");
     }
@@ -975,7 +975,7 @@ void MDLImporter::CalcAbsBoneMatrices_3DGS_MDL7(MDL::IntBone_MDL7 **apcOutBones)
                     }
 
                     // store the name of the bone
-                    pcOutBone->mName.length = static_cast<ai_uint32>(iMaxLen);
+                    pcOutBone->mName.length = (size_t)iMaxLen;
                     ::memcpy(pcOutBone->mName.data, pcBone->name, pcOutBone->mName.length);
                     pcOutBone->mName.data[pcOutBone->mName.length] = '\0';
                 }

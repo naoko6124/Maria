@@ -6,6 +6,8 @@ layout (location = 3) in ivec4 in_bone_id;
 layout (location = 4) in vec4 in_weight;
 
 out vec2 uv;
+out vec3 normal;
+out vec3 position;
 
 uniform mat4 model;
 uniform mat4 camera;
@@ -29,4 +31,6 @@ void main()
     }
     gl_Position = camera * model * skin;
     uv = in_uv;
+    normal = mat3(model) * in_normal;
+    position = vec3(model * skin);
 }

@@ -83,7 +83,11 @@ void AMFImporter::Clear() {
 
 AMFImporter::AMFImporter() AI_NO_EXCEPT :
         mNodeElement_Cur(nullptr),
-        mXmlParser(nullptr) {
+        mXmlParser(nullptr),
+        mUnit(),
+        mVersion(),
+        mMaterial_Converted(),
+        mTexture_Converted() {
     // empty
 }
 

@@ -38,6 +38,16 @@ namespace maria
         {
             application_path = app_path;
             YAML::Node data = YAML::LoadFile(path);
+            if (data["camera"])
+            {
+                main_cam.position.x = data["camera"]["position"]["x"].as<float>();
+                main_cam.position.y = data["camera"]["position"]["y"].as<float>();
+                main_cam.position.z = data["camera"]["position"]["z"].as<float>();
+                
+                main_cam.rotation.x = data["camera"]["rotation"]["x"].as<float>();
+                main_cam.rotation.y = data["camera"]["rotation"]["y"].as<float>();
+                main_cam.rotation.z = data["camera"]["rotation"]["z"].as<float>();
+            }
             for (int i = 0; i < data["shaders"].size(); i++)
             {
                 std::string shader_name = data["shaders"][i]["name"].as<std::string>();
@@ -150,10 +160,6 @@ namespace maria
         }
         void update(float delta)
         {
-            main_cam.position.z = 5.0f;
-            main_cam.position.y = 3.0f;
-            main_cam.rotation.x = -30.0f;
-
             entneko::world& w = world;
             std::map<std::string, shader>& sh = shaders;
             camera& c = main_cam;

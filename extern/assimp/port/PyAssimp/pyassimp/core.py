@@ -115,10 +115,6 @@ def _init(self, target = None, parent = None):
         if m.startswith("_"):
             continue
 
-        # We should not be accessing `mPrivate` according to structs.Scene.
-        if m == 'mPrivate':
-            continue
-
         if m.startswith('mNum'):
             if 'm' + m[4:] in dirself:
                 continue # will be processed later on
@@ -215,7 +211,7 @@ def _init(self, target = None, parent = None):
 
 
             else: # starts with 'm' but not iterable
-                setattr(target, name, obj)
+                setattr(target, m, obj)
                 logger.debug("Added " + name + " as self." + name + " (type: " + str(type(obj)) + ")")
 
                 if _is_init_type(obj):
@@ -311,7 +307,6 @@ def load(filename,
     Scene object with model data
     '''
 
-    from ctypes import c_char_p
     if hasattr(filename, 'read'):
         # This is the case where a file object has been passed to load.
         # It is calling the following function:
@@ -325,7 +320,7 @@ def load(filename,
         model = _assimp_lib.load_mem(data,
                                      len(data),
                                      processing,
-                                     c_char_p(file_type.encode(sys.getfilesystemencoding())))
+                                     file_type)
     else:
         # a filename string has been passed
         model = _assimp_lib.load(filename.encode(sys.getfilesystemencoding()), processing)

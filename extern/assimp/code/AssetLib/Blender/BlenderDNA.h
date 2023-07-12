@@ -106,7 +106,9 @@ struct ElemBase {
         // empty
     }
 
-    virtual ~ElemBase() = default;
+    virtual ~ElemBase() {
+        // empty
+    }
 
     /** Type name of the element. The type
      * string points is the `c_str` of the `name` attribute of the

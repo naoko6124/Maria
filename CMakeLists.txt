@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.0.0)
 set(CMAKE_CXX_STANDARD 17)
 
-#add_subdirectory(extern/assimp)
+add_subdirectory(extern/assimp)
 add_subdirectory(extern/entneko)
 add_subdirectory(extern/glad)
 set(GLFW_BUILD_EXAMPLES OFF)
@@ -24,3 +24,8 @@ project (game)
 file (GLOB_RECURSE game_src game/**.*)
 add_executable (game ${game_src})
 target_link_libraries (game PUBLIC libmaria)
+
+project (fbx_tool)
+file (GLOB_RECURSE fbx_tool_src tools/fbx_tool/**.*)
+add_executable (fbx_tool ${fbx_tool_src})
+target_link_libraries (fbx_tool PUBLIC assimp glm stb)

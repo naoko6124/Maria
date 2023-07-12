@@ -1,20 +1,31 @@
+camera:
+  position:
+    x: 0.0
+    y: 4.0
+    z: 7.0
+  rotation:
+    x: -25.0
+    y: 0.0
+    z: 0.0
+
 shaders:
 
   - name: default_mesh
     vertex: shaders/default_mesh.vsh
     fragment: shaders/default_mesh.fsh
-    
+
   - name: skinned_mesh
     vertex: shaders/skinned_mesh.vsh
     fragment: shaders/skinned_mesh.fsh
 
 entities:
+
   - name: test
     transform:
       position:
         x: 0.0
         y: 0.0
-        z: -4.0
+        z: -4.5
       rotation:
         w: 1.0
         x: 0.0
@@ -25,9 +36,74 @@ entities:
         y: 1.0
         z: 1.0
     collider:
-      x: 5.0
-      y: 5.0
+      x: 10.0
+      y: 10.0
       z: 1.0
+
+  - name: test2
+    transform:
+      position:
+        x: 4.5
+        y: 0.0
+        z: 0.0
+      rotation:
+        w: 1.0
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      scale:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+    collider:
+      x: 1.0
+      y: 10.0
+      z: 10.0
+
+  - name: test3
+    transform:
+      position:
+        x: -4.5
+        y: 0.0
+        z: 0.0
+      rotation:
+        w: 1.0
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      scale:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+    collider:
+      x: 1.0
+      y: 10.0
+      z: 10.0
+
+  - name: box
+    transform:
+      position:
+        x: -2.0
+        y: 0.5
+        z: 0.0
+      rotation:
+        w: 1.0
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      scale:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+    collider:
+      x: 1.0
+      y: 1.0
+      z: 1.0
+    shading: default_mesh
+    mesh:
+      file: meshes/box.mesh
+    texture:
+      file: textures/box.texture
 
   - name: scenario
     transform:
@@ -46,15 +122,15 @@ entities:
         z: 1.0
     shading: default_mesh
     mesh:
-      file: meshes/room.msh
+      file: meshes/room.mesh
     texture:
-      file: textures/room.txr
+      file: textures/room.texture
 
   - name: knight
     transform:
       position:
         x: 0.0
-        y: 1.1
+        y: 1.06
         z: 0.0
       rotation:
         w: 1.0
@@ -66,21 +142,21 @@ entities:
         y: 1.0
         z: 1.0
     collider:
-      x: 1.0
-      y: 1.0
-      z: 1.0
+      x: 0.8
+      y: 2.0
+      z: 0.8
     shading: skinned_mesh
     mesh:
-      file: meshes/knight.msh
+      file: meshes/knight.mesh
     skeleton:
-      file: meshes/knight.skl
+      file: meshes/knight.skeleton
     texture:
-      file: textures/knight.txr
+      file: textures/knight.texture
     animations:
       - name: knight_idle
-        file: animations/knight_idle.ani
+        file: animations/knight_idle.animation
       - name: knight_walk
-        file: animations/knight_walk.ani
+        file: animations/knight_walk.animation
     animation: knight_idle
     script:
       file: scripts/knight.lua
